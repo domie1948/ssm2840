@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.YonghuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.username as username
+        ,a.password as password
+        ,a.yonghu_name as yonghuName
+        ,a.yonghu_phone as yonghuPhone
+        ,a.yonghu_id_number as yonghuIdNumber
+        ,a.yonghu_photo as yonghuPhoto
+        ,a.sex_types as sexTypes
+        ,a.ruxue_time as ruxueTime
+        ,a.jiuye_types as jiuyeTypes
+        ,a.zhuanye_types as zhuanyeTypes
+        ,a.yonghu_gongsi as yonghuGongsi
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.YonghuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM yonghu  a
+
+        <where>
+            <if test=" params.username != '' and params.username != null and params.username != 'null' ">
+                and a.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test=" params.password != '' and params.password != null and params.password != 'null' ">
+                and a.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test=" params.yonghuName != '' and params.yonghuName != null and params.yonghuName != 'null' ">
+                and a.yonghu_name like CONCAT('%',#{params.yonghuName},'%')
+            </if>
+            <if test=" params.yonghuPhone != '' and params.yonghuPhone != null and params.yonghuPhone != 'null' ">
+                and a.yonghu_phone like CONCAT('%',#{params.yonghuPhone},'%')
+            </if>
+            <if test=" params.yonghuIdNumber != '' and params.yonghuIdNumber != null and params.yonghuIdNumber != 'null' ">
+                and a.yonghu_id_number like CONCAT('%',#{params.yonghuIdNumber},'%')
+            </if>
+            <if test="params.sexTypes != null">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test=" params.ruxueTime != '' and params.ruxueTime != null and params.ruxueTime != 'null' ">
+                and a.ruxue_time like CONCAT('%',#{params.ruxueTime},'%')
+            </if>
+            <if test="params.jiuyeTypes != null">
+                and a.jiuye_types = #{params.jiuyeTypes}
+            </if>
+            <if test="params.zhuanyeTypes != null">
+                and a.zhuanye_types = #{params.zhuanyeTypes}
+            </if>
+            <if test=" params.yonghuGongsi != '' and params.yonghuGongsi != null and params.yonghuGongsi != 'null' ">
+                and a.yonghu_gongsi like CONCAT('%',#{params.yonghuGongsi},'%')
+            </if>
+
+        </where>
+        order by a.${params.orderBy} desc
+    </select>
+
+
+    <!-- 性别统计 -->
+    <select id="graphSex" resultType="map">
+        select
+            b.index_name as name,
+            count(*) as value
+        from yonghu a
+        LEFT JOIN dictionary b ON a.sex_types = b.code_index
+        where
+            b.dic_name = "性别类型名称"
+            and   b.dic_code = "sex_types"
+            and   a.ruxue_time= #{ruxueTime}
+        GROUP BY a.sex_types
+    </select>
+
+    <!-- 就业人数和未就业人数统计 -->
+    <select id="graphJiuye" resultType="map">
+        select
+            b.index_name as name,
+            count(*) as value
+        from yonghu a
+        LEFT JOIN dictionary b ON a.jiuye_types = b.code_index
+        where
+            b.dic_name = "是否就业类型名称"
+            and   b.dic_code = "jiuye_types"
+            and   a.ruxue_time= #{ruxueTime}
+        GROUP BY a.jiuye_types
+    </select>
+
+    <!-- 专业统计 -->
+    <select id="graphZhuanye" resultType="map">
+        select
+            b.index_name as name,
+            count(*) as value
+        from yonghu a
+        LEFT JOIN dictionary b ON a.zhuanye_types = b.code_index
+        where
+            b.dic_name = "专业类型名称"
+            and   b.dic_code = "zhuanye_types"
+            and   a.ruxue_time= #{ruxueTime}
+            and   a.jiuye_types = 1
+        GROUP BY a.zhuanye_types
+    </select>
+
+
+</mapper>

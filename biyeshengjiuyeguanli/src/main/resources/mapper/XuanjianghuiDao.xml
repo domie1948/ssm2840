@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.XuanjianghuiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.xuanjianghui_name as xuanjianghuiName
+        ,a.xuanjianghui_photo as xuanjianghuiPhoto
+        ,a.xuanjianghui_start_time as xuanjianghuiStartTime
+        ,a.xuanjianghui_end_time as xuanjianghuiEndTime
+        ,a.xuanjianghui_content as xuanjianghuiContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.XuanjianghuiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM xuanjianghui  a
+
+        <where>
+            <if test=" params.xuanjianghuiName != '' and params.xuanjianghuiName != null and params.xuanjianghuiName != 'null' ">
+                and a.xuanjianghui_name like CONCAT('%',#{params.xuanjianghuiName},'%')
+            </if>
+            <if test=" params.xuanjianghuiStartTimeStart != '' and params.xuanjianghuiStartTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(a.xuanjianghui_start_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.xuanjianghuiStartTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.xuanjianghuiStartTimeEnd != '' and params.xuanjianghuiStartTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(a.xuanjianghui_start_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.xuanjianghuiStartTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+            <if test=" params.xuanjianghuiEndTimeStart != '' and params.xuanjianghuiEndTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(a.xuanjianghui_end_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.xuanjianghuiEndTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.xuanjianghuiEndTimeEnd != '' and params.xuanjianghuiEndTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(a.xuanjianghui_end_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.xuanjianghuiEndTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+            <if test=" params.xuanjianghuiContent != '' and params.xuanjianghuiContent != null and params.xuanjianghuiContent != 'null' ">
+                and a.xuanjianghui_content like CONCAT('%',#{params.xuanjianghuiContent},'%')
+            </if>
+
+        </where>
+        order by a.${params.orderBy} desc
+    </select>
+
+</mapper>

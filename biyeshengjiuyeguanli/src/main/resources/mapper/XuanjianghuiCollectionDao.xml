@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.XuanjianghuiCollectionDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.xuanjianghui_id as xuanjianghuiId
+        ,a.yonghu_id as yonghuId
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.XuanjianghuiCollectionView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,xuanjianghui.xuanjianghui_name as xuanjianghuiName
+        ,xuanjianghui.xuanjianghui_photo as xuanjianghuiPhoto
+        ,xuanjianghui.xuanjianghui_start_time as xuanjianghuiStartTime
+        ,xuanjianghui.xuanjianghui_end_time as xuanjianghuiEndTime
+        ,xuanjianghui.xuanjianghui_content as xuanjianghuiContent
+        ,yonghu.yonghu_name as yonghuName
+        ,yonghu.yonghu_phone as yonghuPhone
+        ,yonghu.yonghu_id_number as yonghuIdNumber
+        ,yonghu.yonghu_photo as yonghuPhoto
+        ,yonghu.sex_types as sexTypes
+        ,yonghu.ruxue_time as ruxueTime
+        ,yonghu.jiuye_types as jiuyeTypes
+        ,yonghu.zhuanye_types as zhuanyeTypes
+        ,yonghu.yonghu_gongsi as yonghuGongsi
+
+        FROM xuanjianghui_collection  a
+        left JOIN xuanjianghui xuanjianghui ON a.xuanjianghui_id = xuanjianghui.id
+        left JOIN yonghu yonghu ON a.yonghu_id = yonghu.id
+
+        <where>
+            <if test="params.xuanjianghuiId != null">
+                and a.xuanjianghui_id = #{params.xuanjianghuiId}
+            </if>
+            <if test="params.yonghuId != null">
+                and a.yonghu_id = #{params.yonghuId}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(a.insert_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.insertTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(a.insert_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.insertTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+
+            <if test=" params.xuanjianghuiName != '' and params.xuanjianghuiName != null and params.xuanjianghuiName != 'null' ">
+                and xuanjianghui.xuanjianghui_name like CONCAT('%',#{params.xuanjianghuiName},'%')
+            </if>
+            <if test=" params.xuanjianghuiStartTimeStart != '' and params.xuanjianghuiStartTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(xuanjianghui.xuanjianghui_start_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.xuanjianghuiStartTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.xuanjianghuiStartTimeEnd != '' and params.xuanjianghuiStartTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(xuanjianghui.xuanjianghui_start_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.xuanjianghuiStartTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+            <if test=" params.xuanjianghuiEndTimeStart != '' and params.xuanjianghuiEndTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(xuanjianghui.xuanjianghui_end_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.xuanjianghuiEndTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.xuanjianghuiEndTimeEnd != '' and params.xuanjianghuiEndTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(xuanjianghui.xuanjianghui_end_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.xuanjianghuiEndTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+            <if test=" params.xuanjianghuiContent != '' and params.xuanjianghuiContent != null and params.xuanjianghuiContent != 'null' ">
+                and xuanjianghui.xuanjianghui_content like CONCAT('%',#{params.xuanjianghuiContent},'%')
+            </if>
+            <if test=" params.yonghuName != '' and params.yonghuName != null and params.yonghuName != 'null' ">
+                and yonghu.yonghu_name like CONCAT('%',#{params.yonghuName},'%')
+            </if>
+            <if test=" params.yonghuPhone != '' and params.yonghuPhone != null and params.yonghuPhone != 'null' ">
+                and yonghu.yonghu_phone like CONCAT('%',#{params.yonghuPhone},'%')
+            </if>
+            <if test=" params.yonghuIdNumber != '' and params.yonghuIdNumber != null and params.yonghuIdNumber != 'null' ">
+                and yonghu.yonghu_id_number like CONCAT('%',#{params.yonghuIdNumber},'%')
+            </if>
+            <if test="params.sexTypes != null">
+                and yonghu.sex_types = #{params.sexTypes}
+            </if>
+
+            <if test=" params.ruxueTime != '' and params.ruxueTime != null and params.ruxueTime != 'null' ">
+                and yonghu.ruxue_time like CONCAT('%',#{params.ruxueTime},'%')
+            </if>
+            <if test="params.jiuyeTypes != null">
+                and yonghu.jiuye_types = #{params.jiuyeTypes}
+            </if>
+
+            <if test="params.zhuanyeTypes != null">
+                and yonghu.zhuanye_types = #{params.zhuanyeTypes}
+            </if>
+
+            <if test=" params.yonghuGongsi != '' and params.yonghuGongsi != null and params.yonghuGongsi != 'null' ">
+                and yonghu.yonghu_gongsi like CONCAT('%',#{params.yonghuGongsi},'%')
+            </if>
+        </where>
+        order by a.${params.orderBy} desc
+    </select>
+
+</mapper>

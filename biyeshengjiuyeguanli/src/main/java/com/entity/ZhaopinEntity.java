@@ -1,0 +1,230 @@
+package com.entity;
+
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.lang.reflect.InvocationTargetException;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.beanutils.BeanUtils;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
+
+/**
+ * 招聘
+ *
+ * @author 
+ * @email
+ * @date 2021-04-14
+ */
+@TableName("zhaopin")
+public class ZhaopinEntity<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+
+	public ZhaopinEntity() {
+
+	}
+
+	public ZhaopinEntity(T t) {
+		try {
+			BeanUtils.copyProperties(this, t);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+    /**
+     * 主键
+     */
+    @TableId(type = IdType.AUTO)
+    @TableField(value = "id")
+
+    private Integer id;
+
+
+    /**
+     * 公司名称
+     */
+    @TableField(value = "zhaopin_name")
+
+    private String zhaopinName;
+
+
+    /**
+     * 公司图片
+     */
+    @TableField(value = "zhaopin_photo")
+
+    private String zhaopinPhoto;
+
+
+    /**
+     * 招聘开始时间
+     */
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat
+    @TableField(value = "zhaopin_start_time",fill = FieldFill.UPDATE)
+
+    private Date zhaopinStartTime;
+
+
+    /**
+     * 招聘结束时间
+     */
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat
+    @TableField(value = "zhaopin_end_time",fill = FieldFill.UPDATE)
+
+    private Date zhaopinEndTime;
+
+
+    /**
+     * 招聘详情
+     */
+    @TableField(value = "zhaopin_content")
+
+    private String zhaopinContent;
+
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
+
+    private Date createTime;
+
+
+    /**
+	 * 设置：主键
+	 */
+    public Integer getId() {
+        return id;
+    }
+
+
+    /**
+	 * 获取：主键
+	 */
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    /**
+	 * 设置：公司名称
+	 */
+    public String getZhaopinName() {
+        return zhaopinName;
+    }
+
+
+    /**
+	 * 获取：公司名称
+	 */
+
+    public void setZhaopinName(String zhaopinName) {
+        this.zhaopinName = zhaopinName;
+    }
+    /**
+	 * 设置：公司图片
+	 */
+    public String getZhaopinPhoto() {
+        return zhaopinPhoto;
+    }
+
+
+    /**
+	 * 获取：公司图片
+	 */
+
+    public void setZhaopinPhoto(String zhaopinPhoto) {
+        this.zhaopinPhoto = zhaopinPhoto;
+    }
+    /**
+	 * 设置：招聘开始时间
+	 */
+    public Date getZhaopinStartTime() {
+        return zhaopinStartTime;
+    }
+
+
+    /**
+	 * 获取：招聘开始时间
+	 */
+
+    public void setZhaopinStartTime(Date zhaopinStartTime) {
+        this.zhaopinStartTime = zhaopinStartTime;
+    }
+    /**
+	 * 设置：招聘结束时间
+	 */
+    public Date getZhaopinEndTime() {
+        return zhaopinEndTime;
+    }
+
+
+    /**
+	 * 获取：招聘结束时间
+	 */
+
+    public void setZhaopinEndTime(Date zhaopinEndTime) {
+        this.zhaopinEndTime = zhaopinEndTime;
+    }
+    /**
+	 * 设置：招聘详情
+	 */
+    public String getZhaopinContent() {
+        return zhaopinContent;
+    }
+
+
+    /**
+	 * 获取：招聘详情
+	 */
+
+    public void setZhaopinContent(String zhaopinContent) {
+        this.zhaopinContent = zhaopinContent;
+    }
+    /**
+	 * 设置：创建时间
+	 */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+
+    /**
+	 * 获取：创建时间
+	 */
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Zhaopin{" +
+            "id=" + id +
+            ", zhaopinName=" + zhaopinName +
+            ", zhaopinPhoto=" + zhaopinPhoto +
+            ", zhaopinStartTime=" + zhaopinStartTime +
+            ", zhaopinEndTime=" + zhaopinEndTime +
+            ", zhaopinContent=" + zhaopinContent +
+            ", createTime=" + createTime +
+        "}";
+    }
+}
